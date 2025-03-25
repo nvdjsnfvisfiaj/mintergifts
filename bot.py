@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 sio = socketio.AsyncClient()
 
 # Токен вашего бота Telegram
-TELEGRAM_TOKEN = '8133398219:AAHm9q7rIaNf1ovb6TY4hdpMNuzWPPsumc4'
+TELEGRAM_TOKEN = '8044348316:AAF4NohbxnKakZ48SIFRhY3B0JeZVF9QX4U'
 
 # Инициализируем бота
 bot = Bot(token=TELEGRAM_TOKEN)
