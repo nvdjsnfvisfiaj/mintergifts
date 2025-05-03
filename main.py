@@ -134,8 +134,8 @@ async def mints(update: Update, context: CallbackContext) -> None:
             )
 
     reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🎁 Базовая" if language == "ru" else "🎁 Basic", url="https://t.me/buygiftsminterbot"),
-         InlineKeyboardButton("⭐ VIP", url="https://t.me/buyvipminterbot")],
+        [InlineKeyboardButton("🎁 Базовая" if language == "ru" else "🎁 Basic", url="https://t.me/asteroalex"),
+         InlineKeyboardButton("⭐ VIP", url="https://t.me/asteroalex")],
         [InlineKeyboardButton("🔙 Назад" if language == "ru" else "🔙 Back", callback_data='back')]
     ])
     await query.edit_message_text(text=text, parse_mode='HTML', reply_markup=reply_markup)
@@ -260,7 +260,7 @@ async def search_gifts(update: Update, context: CallbackContext) -> None:
         back_button_text = "🔙 Back"
     
     reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton(buy_vip_text, url="https://t.me/buyvipminterbot")],
+        [InlineKeyboardButton(buy_vip_text, url="https://t.me/asteroalex")],
         [InlineKeyboardButton(back_button_text, callback_data='back')]
     ])
     await query.edit_message_text(text=text, parse_mode='HTML', reply_markup=reply_markup)
@@ -355,7 +355,7 @@ async def basic_subscription(update: Update, context: CallbackContext) -> None:
         back_button_text = "🔙 Back"
     
     reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton(buy_basic_text, url="https://t.me/buygiftsminterbot")],
+        [InlineKeyboardButton(buy_basic_text, url="https://t.me/asteroalex")],
         [InlineKeyboardButton(back_button_text, callback_data='tariffs')]
     ])
     await query.edit_message_text(text=text, parse_mode='HTML', reply_markup=reply_markup)
@@ -389,7 +389,7 @@ async def vip_plan(update: Update, context: CallbackContext) -> None:
         back_button_text = "🔙 Back"
     
     reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton(buy_vip_text, url="https://t.me/buyvipminterbot")],
+        [InlineKeyboardButton(buy_vip_text, url="https://t.me/asteroalex")],
         [InlineKeyboardButton(back_button_text, callback_data='tariffs')]
     ])
     await query.edit_message_text(text=text, parse_mode='HTML', reply_markup=reply_markup)
@@ -467,8 +467,8 @@ async def subscribe(update: Update, context: CallbackContext) -> None:
     if language == "ru":
         text = (
             "⭐ <b>Купить подписку в Gifts Minter</b>\n\n"
-            "Приобрести Базовую подписку можно здесь: <b>@BuyGiftsMinterBot</b>\n"
-            "Приобрести VIP план можно здесь: <b>@BuyVIPMinterBot</b>\n\n"
+            "Для приобретения базовой подписки обратитесь к @AsteroAlex\n"
+            "Для приобретения VIP подписки обратитесь к @AsteroAlex\n\n"
             "📄 <i>Учтите, что VIP план будет оформлен на ваш аккаунт только после покупки Базовой подписки! "
             "Мы не сможем вернуть вам звезды если вы оформили VIP план, но не имеете Базовой подписки</i>"
         )
@@ -476,8 +476,8 @@ async def subscribe(update: Update, context: CallbackContext) -> None:
     else:
         text = (
             "⭐ <b>Subscribe to Gifts Minter</b>\n\n"
-            "You can purchase the Basic subscription here: <b>@BuyGiftsMinterBot</b>\n"
-            "You can purchase the VIP plan here: <b>@BuyVIPMinterBot</b>\n\n"
+            "You can purchase the Basic subscription here - @AsteroAlex\n"
+            "You can purchase the VIP plan here - @AsteroAlex\n\n"
             "📄 <i>Please note that the VIP plan will only be activated on your account after purchasing the Basic subscription! "
             "We cannot refund your stars if you subscribe to the VIP plan without having the Basic subscription</i>"
         )
@@ -668,6 +668,182 @@ async def language(update: Update, context: CallbackContext) -> None:
         ])
     )
 
+    import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
+
+# Define a logger for debugging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+# Define the details of gifts (stickers and descriptions)
+GIFT_DETAILS = {
+    "gift_Astral_Shard": {
+        "sticker_id": "CAACAgIAAxkBAAJph2gSMRtXNfJCUMSFXmk0utr1B02lAAKFdQACsqnBS0r_71mekeBbNgQ",
+        "text": (
+            "<b>Стоимость:</b> 500⭐\n"
+            "<b>Саплай:</b> 10 000\n"
+            "<b>Первая продажа:</b> 30 ноября 2024 в 21:00\n"
+            "<b>Последняя продажа:</b> 8 декабря 2024 в 11:42"
+        ),
+    },
+    "gift_B-Day_Candle": {
+        "sticker_id": "CAACAgIAAxkBAAJpi2gSMp2NQvTFTLYko2kXTH8RnVnAAAJ4cwACG4TAS7CKh-b6fZomNgQ",
+        "text": (
+            "<b>Стоимость:</b> 350⭐\n"
+            "<b>Саплай:</b> 500 000\n"
+            "<i>Даты продаж неизвестны, так как данный подарок еще в продаже</i>"
+        ),
+    },
+    "gift_Berry_Box": {
+        "sticker_id": "CAACAgIAAxkBAAJpj2gSMvgyVsgipEHUoQABdTzgdK6FFQADbwACvkrBS0tF962mYBPTNgQ",
+        "text": (
+            "<b>Стоимость:</b> 50⭐\n"
+            "<b>Саплай:</b> 100 000\n"
+            "<b>Первая продажа:</b> 12 ноября 2024 в 21:25\n"
+            "<b>Последняя продажа:</b> 21 ноября 2024 в 6:10"
+        ),
+    },
+}
+
+# Command handler for /gifts
+async def gifts(update: Update, context: CallbackContext) -> None:
+    # Delete the user's message
+    if update.message:
+        await context.bot.delete_message(
+            chat_id=update.effective_chat.id, message_id=update.message.message_id
+        )
+
+    # Create the response message
+    message_text = "🎁 <b>Просмотр всех доступных подарков Telegram</b>\n\nВыберите интересующий вас подарок, чтобы узнать подробную информацию о нем:"
+
+    # List of gift names
+    gift_names = [
+        "Astral Shard", "B-Day Candle", "Berry Box", "Bunny Muffin", "Candy Cane",
+        "Cookie Heart", "Crystal Ball", "Desk Calendar", "Diamond Ring", "Durov´s Cap",
+        "Easter Egg", "Electric Skull", "Eternal Candle", "Eternal Rose", "Evil Eye",
+        "Flying Broom", "Genie Lamp", "Ginger Cookie", "Hanging Star", "Hex Pot",
+        "Homemade Cake", "Hypno Lollipop", "Ion Gem", "Jack-In-The-Box", "Jelly Bunny",
+        "Jester Hat", "Jingle Bells", "Kissed Frog", "Lol Pop", "Loot Bag",
+        "Love Candle", "Love Potion", "Lunar Snake", "Mad Pumpkin", "Magic Potion",
+        "Mini Oscar", "Neko Helmet", "Party Sparkler", "Perfume Bottle", "Plush Pepe",
+        "Precious Peach", "Record Player", "Sakura Flower", "Santa Hat", "Scared Cat",
+        "Sharp Tongue", "Signet Ring", "Skull Flower", "Sleigh Bell", "Snow Globe",
+        "Snow Mittens", "Spiced Wine", "Spy Agaric", "Star Notepad", "Swiss Watch",
+        "Tama Gadget", "Top Hat", "Toy Bear", "Trapped Heart", "Vintage Cigar",
+        "Voodoo Doll", "Winter Wreath", "Witch Hat",
+    ]
+
+    # Create inline keyboard with gift names in rows of 3
+    keyboard = [
+        [
+            InlineKeyboardButton(gift_names[i], callback_data=f"gift_{gift_names[i].replace(' ', '_')}")
+            for i in range(row, min(row + 3, len(gift_names)))
+        ]
+        for row in range(0, len(gift_names), 3)
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # Send the message with inline buttons
+    await update.message.reply_text(
+        text=message_text,
+        parse_mode="HTML",
+        reply_markup=reply_markup,
+    )
+
+# Handler for selecting a gift
+async def gift_details(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback query
+
+    # Extract callback data and get the associated details
+    callback_data = query.data
+    if callback_data in GIFT_DETAILS:
+        sticker_id = GIFT_DETAILS[callback_data]["sticker_id"]
+        text = GIFT_DETAILS[callback_data]["text"]
+
+        # Delete the current message with the buttons
+        await query.message.delete()
+
+        # Send the sticker
+        sticker_message = await context.bot.send_sticker(
+            chat_id=query.message.chat_id,
+            sticker=sticker_id,
+        )
+
+        # Store sticker message ID in user_data for later deletion
+        context.user_data[query.message.chat_id] = {"sticker_message_id": sticker_message.message_id}
+
+        # Create a "Back" button
+        reply_markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 Назад", callback_data="back_to_gifts")]
+        ])
+
+        # Send the text with the "Back" button
+        await context.bot.send_message(
+            chat_id=query.message.chat_id,
+            text=text,
+            parse_mode="HTML",
+            reply_markup=reply_markup,
+        )
+
+# Handler to go back to the /gifts menu
+async def back_to_gifts(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback query
+
+    # Delete the sticker message if it exists
+    chat_id = query.message.chat_id
+    if chat_id in context.user_data and "sticker_message_id" in context.user_data[chat_id]:
+        try:
+            await context.bot.delete_message(
+                chat_id=chat_id,
+                message_id=context.user_data[chat_id]["sticker_message_id"]
+            )
+        except Exception as e:
+            logger.error(f"Failed to delete sticker message: {e}")
+        finally:
+            del context.user_data[chat_id]["sticker_message_id"]
+
+    # Recreate the /gifts message with the inline keyboard
+    message_text = "🎁 <b>Просмотр всех доступных подарков Telegram</b>\n\nВыберите интересующий вас подарок, чтобы узнать подробную информацию о нем:"
+    gift_names = [
+        "Astral Shard", "B-Day Candle", "Berry Box", "Bunny Muffin", "Candy Cane",
+        "Cookie Heart", "Crystal Ball", "Desk Calendar", "Diamond Ring", "Durov´s Cap",
+        "Easter Egg", "Electric Skull", "Eternal Candle", "Eternal Rose", "Evil Eye",
+        "Flying Broom", "Genie Lamp", "Ginger Cookie", "Hanging Star", "Hex Pot",
+        "Homemade Cake", "Hypno Lollipop", "Ion Gem", "Jack-In-The-Box", "Jelly Bunny",
+        "Jester Hat", "Jingle Bells", "Kissed Frog", "Lol Pop", "Loot Bag",
+        "Love Candle", "Love Potion", "Lunar Snake", "Mad Pumpkin", "Magic Potion",
+        "Mini Oscar", "Neko Helmet", "Party Sparkler", "Perfume Bottle", "Plush Pepe",
+        "Precious Peach", "Record Player", "Sakura Flower", "Santa Hat", "Scared Cat",
+        "Sharp Tongue", "Signet Ring", "Skull Flower", "Sleigh Bell", "Snow Globe",
+        "Snow Mittens", "Spiced Wine", "Spy Agaric", "Star Notepad", "Swiss Watch",
+        "Tama Gadget", "Top Hat", "Toy Bear", "Trapped Heart", "Vintage Cigar",
+        "Voodoo Doll", "Winter Wreath", "Witch Hat",
+    ]
+
+    # Create inline keyboard with gift names in rows of 3
+    keyboard = [
+        [
+            InlineKeyboardButton(gift_names[i], callback_data=f"gift_{gift_names[i].replace(' ', '_')}")
+            for i in range(row, min(row + 3, len(gift_names)))
+        ]
+        for row in range(0, len(gift_names), 3)
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # Edit the original message to show the menu again
+    await query.message.edit_text(
+        text=message_text,
+        parse_mode="HTML",
+        reply_markup=reply_markup,
+    )
+
 # Define back command handler
 async def back(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -724,6 +900,9 @@ def main() -> None:
     application.add_handler(CommandHandler("addvip", addvip))
     application.add_handler(CommandHandler("seepeople", seepeople))
     application.add_handler(CommandHandler("seevips", seevips))
+    application.add_handler(CommandHandler("gifts", gifts))
+    application.add_handler(CallbackQueryHandler(gift_details, pattern="^gift_"))
+    application.add_handler(CallbackQueryHandler(back_to_gifts, pattern="^back_to_gifts$"))
 
     # Start the Bot
     application.run_polling()
